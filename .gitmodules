@@ -1,0 +1,6 @@
+[submodule "site_visit_client"]
+	path = site_visit_client
+	url = git@github.com:workers-cloud/site_visit_client.git
+[submodule "site_visit_server"]
+	path = site_visit_server
+	url = git@github.com:workers-cloud/site_visit_server.git
