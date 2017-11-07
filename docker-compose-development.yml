@@ -34,3 +34,17 @@ services:
       - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
+
+  client:
+    build: ./site_visit_client
+    image: site_visit_client
+    command: yarn start
+    # environment:
+    #   - API_URL=http://api
+    #   - VIRTUAL_HOST=forecasting.workers.cloud
+    # volumes:
+    #   - client-deps:/app/node_modules
+    ports:
+      - 80:4000
+    # expose:
+    #   - '80'
