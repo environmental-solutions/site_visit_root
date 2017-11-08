@@ -1,8 +1,9 @@
-version: '3'
+version: '3.1'
 
 volumes:
-  postgres-data:
+  postgres_data:
     driver: local
+  bundle_cache:
 
 services:
   server:
@@ -12,8 +13,9 @@ services:
     command: bundle exec rails s -p 8000 -b '0.0.0.0'
     # environment:
     #   - VIRTUAL_HOST=engine.ddx
-    # volumes:
-    #   - .:/site_visit_server
+    volumes:
+      # - .:/site_visit_server
+      - bundle_cache:/bundle
     depends_on:
       - db
     ports:
@@ -31,7 +33,7 @@ services:
       # # Mount our 'dumpdb' script:
       # - ./bin/dumpdb:/bin/dumpdb:ro
       # We'll mount the 'postgres-data' volume into the location Postgres stores it's data:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
 
