@@ -10,7 +10,7 @@ services:
     build: ./site_visit_server
     image: site_visit_server
     # command: bash -c "bundle exec rails s -p 8000 -b '0.0.0.0'"
-    command: bundle exec rails s -p 8000 -b '0.0.0.0'
+    command: bundle exec rails s -e development_docker -p 8000 -b '0.0.0.0'
     # environment:
     #   - VIRTUAL_HOST=engine.ddx
     volumes:
