@@ -1,6 +1,11 @@
 version: '2.0'
 # docker copmose production file - to run with jwilder/nginx-proxy
 
+volumes:
+  postgres_data:
+    driver: local
+  bundle_cache:
+
 services:
   server:
     image: registry.agidevelopment.com/site_visit_server:latest
