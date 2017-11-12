@@ -1,0 +1,53 @@
+version: '2.0'
+# docker copmose production file - to run with jwilder/nginx-proxy
+
+services:
+  server:
+    image: registry.agidevelopment.com/site_visit_server:latest
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8000 -b '0.0.0.0'"
+    environment:
+      - VIRTUAL_HOST=site-visit-api.workers.cloud
+    volumes:
+      - .:/api
+      - bundle_cache:/bundle
+    expose:
+      - '8000'
+    depends_on:
+      - db
+    networks:
+      - default
+      - nginx-proxy
+
+  db:
+    image: postgres:10.0
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/dumps:/db/dumps
+      - ./tmp:/tmp
+      # # # Mount our 'restoredb' script:
+      # # - ./bin/restoredb:/bin/restoredb:ro
+      # # Mount our 'dumpdb' script:
+      # - ./bin/dumpdb:/bin/dumpdb:ro
+      # We'll mount the 'postgres-data' volume into the location Postgres stores it's data:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+
+  client:
+    image: registry.agidevelopment.com/site_visit_client:latest
+    command: yarn start
+    environment:
+      - VIRTUAL_HOST=site-visit.workers.cloud
+    #volumes:
+    #  # TODO: we add the files in the dockerfile.  Why override it
+    #  # here?
+    #  # - ./client:/app
+    #  - client-deps:/app/node_modules
+    expose:
+      - '80'
+    networks:
+      - default
+      - nginx-proxy
+    ports:
+      - 80:3000
