@@ -50,12 +50,12 @@ services:
     #  # - ./client:/app
     #  - client-deps:/app/node_modules
     expose:
-      - '80'
+      - '3000'
     networks:
       - default
       - nginx-proxy
-    ports:
-      - 80:3000
+    # ports:
+    #   - 80:3000
 
 networks:
   nginx-proxy:
