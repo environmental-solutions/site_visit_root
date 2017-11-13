@@ -55,5 +55,5 @@ services:
 
 networks:
   nginx-proxy:
-    # external:
-    #   name: site_vist_proxy-tier
+    external:
+      name: site_vist_proxy-tier
