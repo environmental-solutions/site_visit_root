@@ -7,7 +7,8 @@ volumes:
 
 services:
   server:
-    build: ./site_visit_server
+    build:
+      context ./site_visit_server
       dockerfile: DockerfileRegistry
     image: site_visit_server
     # command: bash -c "bundle exec rails s -p 8000 -b '0.0.0.0'"
