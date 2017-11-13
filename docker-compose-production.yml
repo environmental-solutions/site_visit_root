@@ -11,6 +11,10 @@ services:
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8000 -b '0.0.0.0'"
     environment:
       - VIRTUAL_HOST=site-visit-api.workers.cloud
+      - DB_NAME=site_visit
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_HOST=db
     expose:
       - '8000'
     depends_on:
@@ -39,6 +43,7 @@ services:
     image: registry.agidevelopment.com/site_visit_client:latest
     command: yarn start
     environment:
+      - PORT=4000
       - VIRTUAL_HOST=site-visit.workers.cloud
     #volumes:
     #  # TODO: we add the files in the dockerfile.  Why override it
@@ -46,12 +51,12 @@ services:
     #  # - ./client:/app
     #  - client-deps:/app/node_modules
     expose:
-      - '3000'
+      - '80'
     networks:
       - default
       - nginx-proxy
-    # ports:
-    #   - 80:3000
+    ports:
+      - 80:4000
 
 networks:
   nginx-proxy:

@@ -41,9 +41,8 @@ services:
     build: ./site_visit_client
     image: site_visit_client
     command: yarn start
-    # environment:
-    #   - API_URL=http://api
-    #   - VIRTUAL_HOST=forecasting.workers.cloud
+    environment:
+      - PORT=4000
     # volumes:
     #   - client-deps:/app/node_modules
     ports:
