@@ -4,7 +4,6 @@ version: '2.0'
 volumes:
   postgres_data:
     driver: local
-  bundle_cache:
 
 services:
   server:
@@ -12,9 +11,6 @@ services:
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8000 -b '0.0.0.0'"
     environment:
       - VIRTUAL_HOST=site-visit-api.workers.cloud
-    volumes:
-      - .:/api
-      - bundle_cache:/bundle
     expose:
       - '8000'
     depends_on:
