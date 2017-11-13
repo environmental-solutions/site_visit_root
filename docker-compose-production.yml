@@ -9,7 +9,6 @@ services:
   server:
     image: registry.agidevelopment.com/site_visit_server:latest
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8000 -b '0.0.0.0'"
-    dockerfile: DockerfileRegistry
     environment:
       - VIRTUAL_HOST=site-visit-api.workers.cloud
     expose:
