@@ -1,0 +1,43 @@
+version: '2.0'
+
+volumes:
+  postgres_data:
+    driver: local
+  bundle_cache:
+
+services:
+  server:
+    build: ./site_visit_server
+    image: site_visit_server
+    command:  bundle exec rails s -p 8000 -b '0.0.0.0'
+    environment:
+      - VIRTUAL_HOST=engine.dev
+      - CORS_ORIGIN=http://dev.ddx
+      - RAILS_ENV=development_docker
+    volumes:
+      - bundle_cache:/bundle
+    depends_on:
+      - db
+    ports:
+       - "8000:8000"
+
+  db:
+    image: postgres:10.0
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/dumps:/db/dumps
+      - ./tmp:/tmp
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=xxxxx
+
+  client:
+    build: ./site_visit_client
+    image: site_visit_client
+    command: yarn start
+    environment:
+      - PORT=4000
+      - REACT_APP_SERVER_API=http://dev.ddx:8000/graphql
+    ports:
+      - 80:4000
