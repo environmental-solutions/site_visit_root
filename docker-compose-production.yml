@@ -7,7 +7,7 @@ volumes:
 
 services:
   server:
-    image: registry.agidevelopment.com/site_visit_server:0.9.3
+    image: registry.agidevelopment.com/site_visit_server:0.9.6
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8001 -b '0.0.0.0'"
     environment:
       - RAILS_ENV=production
@@ -17,7 +17,7 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=froze_ouster_shroud
       - DB_HOST=db
-      - CORS_ORIGIN=http://site-visit.workers.cloud:4000
+      - CORS_ORIGIN=http://site-visit.workers.cloud
     expose:
       - '8001'
     ports:
@@ -45,8 +45,8 @@ services:
       - POSTGRES_PASSWORD=froze_ouster_shroud
 
   client:
-    image: registry.agidevelopment.com/site_visit_client:0.9.3
-    command: yarn start
+    image: registry.agidevelopment.com/site_visit_client:0.9.6
+    command: yarn start-container
     environment:
       - VIRTUAL_HOST=site-visit.workers.cloud
       - PORT=4000
