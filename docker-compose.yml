@@ -9,12 +9,12 @@ services:
   server:
     build: ./site_visit_server
     image: site_visit_server
-    # command: bash -c "bundle exec rails s -p 8000 -b '0.0.0.0'"
-    command: bundle exec rails s -e development_docker -p 8000 -b '0.0.0.0'
-    # environment:
-    #   - VIRTUAL_HOST=engine.ddx
+    command:  bundle exec rails s -p 8000 -b '0.0.0.0'
+    environment:
+      - VIRTUAL_HOST=engine.ddx
+      - CORS_ORIGIN=http://dev.ddx
+      - RAILS_ENV=development_docker
     volumes:
-      # - .:/site_visit_server
       - bundle_cache:/bundle
     depends_on:
       - db
@@ -35,7 +35,7 @@ services:
       # We'll mount the 'postgres-data' volume into the location Postgres stores it's data:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: password
+      - POSTGRES_PASSWORD=password
 
   client:
     build: ./site_visit_client
@@ -43,6 +43,7 @@ services:
     command: yarn start
     environment:
       - PORT=4000
+      - REACT_APP_SERVER_API=http://dev.ddx:8000/graphql
     # volumes:
     #   - client-deps:/app/node_modules
     ports:
