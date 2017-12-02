@@ -7,16 +7,21 @@ volumes:
 
 services:
   server:
-    image: registry.agidevelopment.com/site_visit_server:latest
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8000 -b '0.0.0.0'"
+    image: registry.agidevelopment.com/site_visit_server:0.9.2
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8001 -b '0.0.0.0'"
     environment:
+      - RAILS_ENV=production
+      - SECRET_KEY_BASE=98bb3717bc038bd97d3b6c63c5948d82548fecec1754ae8f408de6daeae5a2d78e8baa5e5093c6e6930be7624303cb45f2de493e925ecaeeed206
       - VIRTUAL_HOST=site-visit-api.workers.cloud
       - DB_NAME=site_visit
       - DB_USER=postgres
-      - DB_PASSWORD=password
+      - DB_PASSWORD=froze_ouster_shroud
       - DB_HOST=db
+      - CORS_ORIGIN=site-visit.workers.cloud:4000
     expose:
-      - '8000'
+      - '8001'
+    ports:
+      - '8001:8001'
     depends_on:
       - db
     networks:
@@ -26,7 +31,7 @@ services:
   db:
     image: postgres:10.0
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ./db/dumps:/db/dumps
       - ./tmp:/tmp
@@ -37,28 +42,32 @@ services:
       # We'll mount the 'postgres-data' volume into the location Postgres stores it's data:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: password
+      - VIRTUAL_HOST=site-visit-api.workers.cloud:4000
+      - POSTGRES_PASSWORD=froze_ouster_shroud
+    networks:
+      - default
 
   client:
-    image: registry.agidevelopment.com/site_visit_client:latest
+    image: registry.agidevelopment.com/site_visit_client:0.9.2
     command: yarn start
     environment:
-      - PORT=4000
       - VIRTUAL_HOST=site-visit.workers.cloud
+      - PORT=4000
+      - REACT_APP_SERVER_API=http://site-visit-api.workers.cloud:8001/graphql
     #volumes:
     #  # TODO: we add the files in the dockerfile.  Why override it
     #  # here?
     #  # - ./client:/app
     #  - client-deps:/app/node_modules
     expose:
-      - '80'
+      - '4000'
+    ports:
+     - '4000:4000'
     networks:
       - default
       - nginx-proxy
-    ports:
-      - 80:4000
 
 networks:
   nginx-proxy:
     external:
-      name: site_vist_proxy-tier
+      name: nginx-proxy
