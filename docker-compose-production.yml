@@ -7,7 +7,7 @@ volumes:
 
 services:
   server:
-    image: registry.agidevelopment.com/site_visit_server:0.9.2
+    image: registry.agidevelopment.com/site_visit_server:0.9.3
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8001 -b '0.0.0.0'"
     environment:
       - RAILS_ENV=production
@@ -17,7 +17,7 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=froze_ouster_shroud
       - DB_HOST=db
-      - CORS_ORIGIN=site-visit.workers.cloud:4000
+      - CORS_ORIGIN=http://site-visit.workers.cloud:4000
     expose:
       - '8001'
     ports:
@@ -26,7 +26,6 @@ services:
       - db
     networks:
       - default
-      - nginx-proxy
 
   db:
     image: postgres:10.0
@@ -42,18 +41,16 @@ services:
       # We'll mount the 'postgres-data' volume into the location Postgres stores it's data:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      - VIRTUAL_HOST=site-visit-api.workers.cloud:4000
+      - VIRTUAL_HOST=site-visit-db.workers.cloud
       - POSTGRES_PASSWORD=froze_ouster_shroud
-    networks:
-      - default
 
   client:
-    image: registry.agidevelopment.com/site_visit_client:0.9.2
+    image: registry.agidevelopment.com/site_visit_client:0.9.3
     command: yarn start
     environment:
       - VIRTUAL_HOST=site-visit.workers.cloud
       - PORT=4000
-      - REACT_APP_SERVER_API=http://site-visit-api.workers.cloud:8001/graphql
+      - REACT_APP_SERVER_API=http://site-visit-api.workers.cloud/graphql
     #volumes:
     #  # TODO: we add the files in the dockerfile.  Why override it
     #  # here?
@@ -63,11 +60,8 @@ services:
       - '4000'
     ports:
      - '4000:4000'
-    networks:
-      - default
-      - nginx-proxy
 
 networks:
-  nginx-proxy:
+  default:
     external:
       name: nginx-proxy
