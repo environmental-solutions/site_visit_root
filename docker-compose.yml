@@ -11,7 +11,7 @@ services:
     image: site_visit_server
     command:  bundle exec rails s -p 8000 -b '0.0.0.0'
     environment:
-      - CORS_ORIGIN=http://site_visit.dev
+      - CORS_ORIGIN=http://site_visit.ddx
       - RAILS_ENV=development_docker
     volumes:
       - bundle_cache:/bundle
