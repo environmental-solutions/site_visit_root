@@ -11,8 +11,13 @@ services:
     image: site_visit_server
     command:  bundle exec rails s -p 8000 -b '0.0.0.0'
     environment:
-      # - CORS_ORIGIN=http://site_visit.ddx
+      - CORS_ORIGIN=${CORS_ORIGIN}
       - RAILS_ENV=development_docker
+      - TAG=${TAG}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
     volumes:
       - bundle_cache:/bundle
     depends_on:
@@ -34,7 +39,7 @@ services:
       # We'll mount the 'postgres-data' volume into the location Postgres stores it's data:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
 
   client:
     build: ./site_visit_client
@@ -47,5 +52,3 @@ services:
     #   - client-deps:/app/node_modules
     ports:
       - 80:4000
-    # expose:
-    #   - '80'

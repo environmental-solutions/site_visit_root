@@ -1,0 +1,6 @@
+TAG=2.0
+DB_HOST=db
+DB_NAME=site_visit_dev
+DB_USER=postgres
+DB_PASSWORD=password
+CORS_ORIGIN=site-visit.dev
