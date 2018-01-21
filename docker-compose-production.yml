@@ -1,4 +1,4 @@
-version: '2.0'
+version: '2'
 # docker copmose production file - to run with jwilder/nginx-proxy
 
 volumes:
