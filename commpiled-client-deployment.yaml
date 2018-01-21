@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-production.yml
+    kompose.version: 1.7.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: commpiled-client
+  name: commpiled-client
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: commpiled-client
+    spec:
+      containers:
+      - args:
+        - server
+        - -s
+        - build
+        env:
+        - name: PORT
+          value: "4000"
+        - name: REACT_APP_SERVER_API
+          value: http://site-visit-api.workers.cloud/graphql
+        - name: VIRTUAL_HOST
+          value: site-visit-compiled.workers.cloud
+        image: registry.agidevelopment.com/site_visit_compoiled:0.9.6
+        name: commpiled-client
+        ports:
+        - containerPort: 4000
+        resources: {}
+      restartPolicy: Always
+status: {}

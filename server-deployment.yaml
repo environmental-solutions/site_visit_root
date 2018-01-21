@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-production.yml
+    kompose.version: 1.7.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: server
+  name: server
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: server
+    spec:
+      containers:
+      - args:
+        - bash
+        - -c
+        - rm -f tmp/pids/server.pid && bundle exec rails s -p 8001 -b '0.0.0.0'
+        env:
+        - name: CORS_ORIGIN
+          value: http://site-visit.workers.cloud
+        - name: CORS_ORIGIN2
+          value: http://site-visit-compiled.workers.cloud
+        - name: DB_HOST
+          value: db
+        - name: DB_NAME
+          value: site_visit
+        - name: DB_PASSWORD
+          value: froze_ouster_shroud
+        - name: DB_USER
+          value: postgres
+        - name: RAILS_ENV
+          value: production
+        - name: SECRET_KEY_BASE
+          value: 98bb3717bc038bd97d3b6c63c5948d82548fecec1754ae8f408de6daeae5a2d78e8baa5e5093c6e6930be7624303cb45f2de493e925ecaeeed206
+        - name: VIRTUAL_HOST
+          value: site-visit-api.workers.cloud
+        image: registry.agidevelopment.com/site_visit_server:0.9.16
+        name: server
+        ports:
+        - containerPort: 8001
+        resources: {}
+      restartPolicy: Always
+status: {}
